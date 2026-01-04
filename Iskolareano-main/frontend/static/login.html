@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Scholar Login</title>
+ 
+
+<style>
+  :root {
+    --orange: #FF7700;
+    --navy: #002054;
+    --light-gray: #F2F2F2;
+    --white: #ffffff;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--light-gray);
+    font-family: 'Segoe UI', Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  .container {
+    width: 380px;
+    background: var(--white);
+    padding: 2.5rem 2.2rem;
+    border-radius: 22px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    text-align: center;
+  }
+
+  .title {
+    font-size: 1.9rem;
+    font-weight: 900;
+    color: var(--navy);
+  }
+
+  .title span {
+    color: var(--orange);
+  }
+
+  .subtitle {
+    margin-top: 4px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--navy);
+  }
+
+  /* ⭐ Input styling matching your sample */
+  .input-box {
+    width: 100%;
+    padding: 1rem;
+    margin-top: 1.2rem;
+    border-radius: 16px;
+    border: 1.5px solid #bcbcbc;
+    font-size: 1rem;
+    background: #f7f7f7;
+    text-align: left;
+    box-sizing: border-box;
+  }
+
+  .input-box::placeholder {
+    color: #888;
+  }
+
+  .input-box:focus {
+    outline: none;
+    border-color: var(--orange);
+    box-shadow: 0 0 0 3px rgba(255,119,0,0.25);
+  }
+
+  button {
+    width: 100%;
+    margin-top: 1.8rem;
+    padding: 1rem;
+    background: var(--orange);
+    color: var(--white);
+    font-size: 1.15rem;
+    border: none;
+    border-radius: 22px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: 0.3s;
+  }
+
+  button:hover {
+    background: #e06200;
+  }
+
+  .back {
+    display: block;
+    margin-top: 1rem;
+    font-size: 0.95rem;
+    color: var(--navy);
+    text-decoration: none;
+  }
+
+  .back:hover {
+    text-decoration: underline;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <div class="title">ISKOLA<span>REALEÑO</span></div>
+  <div class="subtitle">Scholar Login</div>
+
+  <input id="email" type="email" class="input-box" placeholder="Email">
+  <input id="password" type="password" class="input-box" placeholder="Password">
+<button type="button" id="loginBtn">Login</button>
+
+  <a href="signup.html" class="back">← Sign up</a>
+  <a href="forgot-password.html" class="back">← forgot password?</a>
+</div>
+
+<!-- Load Supabase JS -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const btn = document.getElementById("loginBtn");
+
+  btn.addEventListener("click", async () => {
+    alert("Login button clicked"); // ✅ TEST — YOU MUST SEE THIS
+
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    try {
+      const res = await fetch("http://localhost:5000/api/login", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ email, password })
+});
+
+const data = await res.json();
+
+// 👇 ADD THESE
+
+
+      if (!res.ok) {
+        alert("❌ " + data.error);
+        return;
+      }
+
+      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("role", data.role);
+
+      if (data.role === "applicant") {
+        window.location.href = "applicant-dashboard.html";
+      } else if (data.role === "scholar") {
+        window.location.href = "homepage2.html";
+      }
+
+    } catch (err) {
+      alert("FETCH ERROR: " + err.message);
+    }
+  });
+});
+</script>
+
+
+</body>
+</html>
